@@ -21,6 +21,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginLeft="20dp"
+        android:src="@drawable/btn_back_white"
         app:layout_constraintBottom_toBottomOf="@id/publishpage_basictaskpublish_1_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_title" />
@@ -244,8 +245,8 @@
         android:layout_marginTop="4dp"
         android:layout_marginRight="15dp"
         android:background="@color/listview_topline"
-        app:layout_constraintTop_toBottomOf="@id/publishpage_basictaskpublish_1_deadline_tv"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/publishpage_basictaskpublish_1_deadline_tv" />
 
     <TextView
         android:id="@+id/publishpage_basictaskpublish_1_longitude_tv"
@@ -255,9 +256,9 @@
         android:gravity="center|left"
         android:text="@string/longitude"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="@id/publishpage_basictaskpublish_1_deadline_tv"
-        app:layout_constraintTop_toBottomOf="@id/publishpage_basictaskpublish_1_deadline_tv"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@id/publishpage_basictaskpublish_1_deadline_tv" />
 
     <TextView
         android:id="@+id/publishpage_basictaskpublish_1_longitude_tv_content"
@@ -266,12 +267,12 @@
         android:layout_marginLeft="15dp"
         android:gravity="center|left"
         android:hint="@string/longitude"
+        android:maxEms="9"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/publishpage_basictaskpublish_1_longitude_tv"
         app:layout_constraintLeft_toRightOf="@id/publishpage_basictaskpublish_1_longitude_tv"
-        app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_longitude_tv"
-        android:maxEms="9"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_longitude_tv" />
 
     <TextView
         android:id="@+id/publishpage_basictaskpublish_1_latitude_tv"
@@ -281,11 +282,10 @@
         android:gravity="center|left"
         android:text="@string/latitude"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/publishpage_basictaskpublish_1_longitude_tv"
         app:layout_constraintLeft_toRightOf="@id/publishpage_basictaskpublish_1_longitude_tv_content"
-        app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_longitude_tv"
-        android:visibility="gone"/>
-
+        app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_longitude_tv" />
 
 
     <TextView
@@ -295,12 +295,12 @@
         android:layout_marginLeft="15dp"
         android:gravity="center|left"
         android:hint="@string/latitude"
+        android:maxEms="9"
         android:textSize="12sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/publishpage_basictaskpublish_1_longitude_tv"
         app:layout_constraintLeft_toRightOf="@id/publishpage_basictaskpublish_1_latitude_tv"
-        app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_longitude_tv"
-        android:maxEms="9"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="@id/publishpage_basictaskpublish_1_longitude_tv" />
 
     <View
         android:layout_width="match_parent"
