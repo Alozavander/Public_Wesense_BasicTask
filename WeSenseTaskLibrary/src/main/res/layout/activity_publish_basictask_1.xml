@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="14dp"
         android:layout_marginTop="8dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/remindDark"
         android:gravity="center|left"
         android:text="@string/Step_one"
         android:textColor="@color/white"
