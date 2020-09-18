@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.wesensetasklibrary">
+
+    <application>
+        <activity android:name=".example.Activity_publish_basictask_1"></activity>
+        <activity android:name=".example.Activity_Task_Detail"></activity>
+        <activity android:name=".example.Activity_Task_Submit"></activity>
+        <activity android:name=".ImplementionActivityPack.Activity_Publish_Basictask_imp"></activity>
+    </application>
+
+</manifest>

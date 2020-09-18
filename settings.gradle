@@ -1,0 +1,3 @@
+include ':WeSenseTaskLibrary'
+include ':app'
+rootProject.name = "WeSenseTaskLib"
