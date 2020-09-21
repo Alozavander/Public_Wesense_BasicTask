@@ -1,10 +1,12 @@
-package com.example.wesensetasklibrary.example;
+package com.example.wesensetasklibrary.ImplementionActivityPack;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -26,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -65,7 +66,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class Activity_Task_Submit extends AppCompatActivity {
+//注意此Activity的初始化需要传入两个URL以及task的gson格式内容
+public class Activity_Task_Submit_imp extends AppCompatActivity {
     public static final int IMAGE_ITEM_ADD = -1;
     public static final int REQUEST_CODE_SELECT = 100;
     public static final int REQUEST_CODE_PREVIEW = 101;
@@ -98,6 +100,10 @@ public class Activity_Task_Submit extends AppCompatActivity {
     private BroadcastReceiver receiver;
     private Integer taskID;
     private long totalLength;
+    private String taskSubmitURL;
+    private String taskSubmitURLTag = "publish_bascitask_taskSubmit";
+    private String fileUploadURL;
+    private String fileUploadURLTag = "publish_bascitask_fileUpload";
 
 
     @Override
@@ -124,11 +130,29 @@ public class Activity_Task_Submit extends AppCompatActivity {
             }
         });
 
+        initURLString();
+
         initImagePicker();
         initAudioPicker();
         initVideoPicker();
         //For sensor data
         //initSensorDataPicker();
+    }
+
+    private void initURLString() {
+        Intent lIntent = getIntent();
+        taskSubmitURL = lIntent.getStringExtra(taskSubmitURLTag);
+        fileUploadURL = lIntent.getStringExtra(fileUploadURLTag);
+        if (taskSubmitURL == null && fileUploadURL == null) {
+            AlertDialog lAlertDialog = new AlertDialog.Builder(this).setTitle("Activity初始化错误").setMessage("无法连接服务器").setCancelable(false).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface pDialogInterface, int pI) {
+                    pDialogInterface.dismiss();
+                    finish();
+                }
+            }).create();
+            lAlertDialog.show();
+        }
     }
 
     //根据Intent传过来的String判定任务需要哪些传感器
@@ -147,8 +171,8 @@ public class Activity_Task_Submit extends AppCompatActivity {
     private void initImagePicker() {
         imageList = new ArrayList<File>();
         RecyclerView recyclerView = findViewById(R.id.activity_taskSub_image_rv);
-        image_Adapter = new Adapter_RecyclerView_TaskSubmit_Image(Activity_Task_Submit.this, imageList);
-        GridLayoutManager manager = new GridLayoutManager(Activity_Task_Submit.this, 3, LinearLayoutManager.VERTICAL, false);
+        image_Adapter = new Adapter_RecyclerView_TaskSubmit_Image(Activity_Task_Submit_imp.this, imageList);
+        GridLayoutManager manager = new GridLayoutManager(Activity_Task_Submit_imp.this, 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(image_Adapter);
 
@@ -165,7 +189,7 @@ public class Activity_Task_Submit extends AppCompatActivity {
                         switch (position) {
                             case 0:
                                 //进入相册并选择
-                                PictureSelector.create(Activity_Task_Submit.this)
+                                PictureSelector.create(Activity_Task_Submit_imp.this)
                                         .openGallery(PictureMimeType.ofImage())
                                         .isCamera(false)// 是否显示拍照按钮 true or false
                                         .forResult(PictureConfig.CHOOSE_REQUEST);
@@ -181,8 +205,8 @@ public class Activity_Task_Submit extends AppCompatActivity {
         audioList = new ArrayList<File>();
         //初始化Audio的RV
         RecyclerView audio_rv = findViewById(R.id.activity_taskSub_audio_rv);
-        audio_rv.setLayoutManager(new LinearLayoutManager(Activity_Task_Submit.this, LinearLayoutManager.VERTICAL, false));
-        audio_Adapter = new Adapter_RecyclerView_TaskSubmit_Audio(Activity_Task_Submit.this, audioList);
+        audio_rv.setLayoutManager(new LinearLayoutManager(Activity_Task_Submit_imp.this, LinearLayoutManager.VERTICAL, false));
+        audio_Adapter = new Adapter_RecyclerView_TaskSubmit_Audio(Activity_Task_Submit_imp.this, audioList);
         audio_rv.setAdapter(audio_Adapter);
 
         //初始化add的按钮
@@ -203,8 +227,8 @@ public class Activity_Task_Submit extends AppCompatActivity {
         videoList = new ArrayList<File>();
         //初始化Audio的RV
         RecyclerView video_rv = findViewById(R.id.activity_taskSub_video_rv);
-        video_rv.setLayoutManager(new LinearLayoutManager(Activity_Task_Submit.this, LinearLayoutManager.VERTICAL, false));
-        video_Adapter = new Adapter_RecyclerView_TaskSubmit_Video(Activity_Task_Submit.this, videoList);
+        video_rv.setLayoutManager(new LinearLayoutManager(Activity_Task_Submit_imp.this, LinearLayoutManager.VERTICAL, false));
+        video_Adapter = new Adapter_RecyclerView_TaskSubmit_Video(Activity_Task_Submit_imp.this, videoList);
         video_rv.setAdapter(video_Adapter);
 
         //初始化add的按钮
@@ -282,7 +306,7 @@ public class Activity_Task_Submit extends AppCompatActivity {
                     Gson gson = new Gson();
                     String postContent = gson.toJson(user_task);
                     //创建Retrofit实例
-                    Retrofit retrofit = new Retrofit.Builder().baseUrl(getResources().getString(R.string.base_url)).addConverterFactory(GsonConverterFactory.create()).build();
+                    Retrofit retrofit = new Retrofit.Builder().baseUrl(fileUploadURL).addConverterFactory(GsonConverterFactory.create()).build();
                     //创建网络接口实例
                     PostRequest_taskSubmit_files subRequest = retrofit.create(PostRequest_taskSubmit_files.class);
                     //创建RequestBody
@@ -294,11 +318,11 @@ public class Activity_Task_Submit extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.code() == 200) {
-                                Toast.makeText(Activity_Task_Submit.this, getResources().getString(R.string.Task_Submit_success_remind), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Activity_Task_Submit_imp.this, getResources().getString(R.string.Task_Submit_success_remind), Toast.LENGTH_LONG).show();
                                 mNumberProgressBar.setVisibility(View.GONE);
                                 finish();
                             } else {
-                                Toast.makeText(Activity_Task_Submit.this, getResources().getString(R.string.Task_Submit_fail_remind), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Activity_Task_Submit_imp.this, getResources().getString(R.string.Task_Submit_fail_remind), Toast.LENGTH_LONG).show();
                                 mNumberProgressBar.setVisibility(View.GONE);
                             }
                         }
@@ -349,7 +373,7 @@ public class Activity_Task_Submit extends AppCompatActivity {
                     Gson gson = new Gson();
                     String postContent = gson.toJson(user_task);
                     //创建Retrofit实例
-                    Retrofit retrofit = new Retrofit.Builder().baseUrl(getResources().getString(R.string.base_url)).addConverterFactory(GsonConverterFactory.create()).build();
+                    Retrofit retrofit = new Retrofit.Builder().baseUrl(fileUploadURL).addConverterFactory(GsonConverterFactory.create()).build();
                     //创建网络接口实例
                     PostRequest_taskSubmit_files subRequest = retrofit.create(PostRequest_taskSubmit_files.class);
                     //创建RequestBody
@@ -361,11 +385,11 @@ public class Activity_Task_Submit extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.code() == 200) {
-                                Toast.makeText(Activity_Task_Submit.this, getResources().getString(R.string.Task_Submit_success_remind), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Activity_Task_Submit_imp.this, getResources().getString(R.string.Task_Submit_success_remind), Toast.LENGTH_LONG).show();
                                 mNumberProgressBar.setVisibility(View.GONE);
                                 finish();
                             } else {
-                                Toast.makeText(Activity_Task_Submit.this, getResources().getString(R.string.Task_Submit_fail_remind), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Activity_Task_Submit_imp.this, getResources().getString(R.string.Task_Submit_fail_remind), Toast.LENGTH_LONG).show();
                                 mNumberProgressBar.setVisibility(View.GONE);
                             }
                         }
@@ -415,7 +439,7 @@ public class Activity_Task_Submit extends AppCompatActivity {
                     Gson gson = new Gson();
                     String postContent = gson.toJson(user_task);
                     //创建Retrofit实例
-                    Retrofit retrofit = new Retrofit.Builder().baseUrl(getResources().getString(R.string.base_url)).addConverterFactory(GsonConverterFactory.create()).build();
+                    Retrofit retrofit = new Retrofit.Builder().baseUrl(fileUploadURL).addConverterFactory(GsonConverterFactory.create()).build();
                     //创建网络接口实例
                     PostRequest_taskSubmit_files subRequest = retrofit.create(PostRequest_taskSubmit_files.class);
                     //创建RequestBody
@@ -427,11 +451,11 @@ public class Activity_Task_Submit extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if (response.code() == 200) {
-                                Toast.makeText(Activity_Task_Submit.this, getResources().getString(R.string.Task_Submit_success_remind), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Activity_Task_Submit_imp.this, getResources().getString(R.string.Task_Submit_success_remind), Toast.LENGTH_LONG).show();
                                 mNumberProgressBar.setVisibility(View.GONE);
                                 finish();
                             } else {
-                                Toast.makeText(Activity_Task_Submit.this, getResources().getString(R.string.Task_Submit_fail_remind), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Activity_Task_Submit_imp.this, getResources().getString(R.string.Task_Submit_fail_remind), Toast.LENGTH_LONG).show();
                                 mNumberProgressBar.setVisibility(View.GONE);
                             }
                         }
@@ -491,11 +515,11 @@ public class Activity_Task_Submit extends AppCompatActivity {
                     File temFile = new File(media.getPath());
                     //限制20MB大小
                     if(temFile.length()/1024 <= 20480) fileList.add(temFile);
-                    else Toast.makeText(Activity_Task_Submit.this, getString(R.string.Task_Submit_add_size_error), Toast.LENGTH_SHORT);
+                    else Toast.makeText(Activity_Task_Submit_imp.this, getString(R.string.Task_Submit_add_size_error), Toast.LENGTH_SHORT);
                 }
                 image_Adapter.AddItemList(fileList);
             } else
-                Toast.makeText(Activity_Task_Submit.this, getString(R.string.Task_Submit_add_error), Toast.LENGTH_SHORT);
+                Toast.makeText(Activity_Task_Submit_imp.this, getString(R.string.Task_Submit_add_error), Toast.LENGTH_SHORT);
         }
         //Audio Search & Add
         if (requestCode == RequestCodes.Audio_Search_RC && resultCode == Activity.RESULT_OK) {
@@ -505,10 +529,10 @@ public class Activity_Task_Submit extends AppCompatActivity {
                 File audio = new File(audio_path);
                 //通知Audio的Adapter更新
                 if(audio.length()/1024 <= 20480)  audio_Adapter.AddFooterItem(audio);
-                else Toast.makeText(Activity_Task_Submit.this, getString(R.string.Task_Submit_add_size_error), Toast.LENGTH_SHORT);
+                else Toast.makeText(Activity_Task_Submit_imp.this, getString(R.string.Task_Submit_add_size_error), Toast.LENGTH_SHORT);
 
             } else
-                Toast.makeText(Activity_Task_Submit.this, getString(R.string.Task_Submit_add_error), Toast.LENGTH_SHORT);
+                Toast.makeText(Activity_Task_Submit_imp.this, getString(R.string.Task_Submit_add_error), Toast.LENGTH_SHORT);
         }
         //Video Search & Add
         if (requestCode == RequestCodes.Video_Search_RC && resultCode == Activity.RESULT_OK) {
@@ -517,10 +541,10 @@ public class Activity_Task_Submit extends AppCompatActivity {
             if (video_path != null) {
                 File video = new File(video_path);
                 if(video.length()/1024 <= 20480) video_Adapter.AddFooterItem(video);
-                else Toast.makeText(Activity_Task_Submit.this, getString(R.string.Task_Submit_add_size_error), Toast.LENGTH_SHORT);
+                else Toast.makeText(Activity_Task_Submit_imp.this, getString(R.string.Task_Submit_add_size_error), Toast.LENGTH_SHORT);
                 //通知Audio的Adapter更新
             } else
-                Toast.makeText(Activity_Task_Submit.this, getString(R.string.Task_Submit_add_error), Toast.LENGTH_SHORT);
+                Toast.makeText(Activity_Task_Submit_imp.this, getString(R.string.Task_Submit_add_error), Toast.LENGTH_SHORT);
         }
 
     }
@@ -538,7 +562,7 @@ public class Activity_Task_Submit extends AppCompatActivity {
             Gson gson = new Gson();
             String postContent = gson.toJson(user_task);
             //创建Retrofit实例
-            Retrofit retrofit = new Retrofit.Builder().baseUrl("BaseURL").addConverterFactory(GsonConverterFactory.create()).build();
+            Retrofit retrofit = new Retrofit.Builder().baseUrl(taskSubmitURL).addConverterFactory(GsonConverterFactory.create()).build();
             //创建网络接口实例
             PostRequest_taskSubmit subRequest = retrofit.create(PostRequest_taskSubmit.class);
             //创建RequestBody

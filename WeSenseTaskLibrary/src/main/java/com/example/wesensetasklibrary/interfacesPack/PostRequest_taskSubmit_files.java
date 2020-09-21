@@ -15,6 +15,6 @@ public interface PostRequest_taskSubmit_files {
     Call<ResponseBody> task_Submission(@Part("subText") String subText, @Part List<MultipartBody.Part> picList);*/
 
     @Multipart
-    @POST("/xxxx")                                                //Post目标地址
+    @POST("/")                                                //Post目标地址
     Call<ResponseBody> task_submit(@Part("utask") RequestBody user_task_Info, @Part MultipartBody.Part file);
 }

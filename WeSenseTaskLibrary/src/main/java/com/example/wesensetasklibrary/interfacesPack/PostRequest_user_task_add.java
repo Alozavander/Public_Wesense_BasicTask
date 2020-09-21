@@ -10,6 +10,6 @@ import retrofit2.http.POST;
 public interface PostRequest_user_task_add {
     //Retrofit 网络请求接口
     @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
-    @POST("/xxx")
+    @POST("/")
     Call<ResponseBody> add_user_task(@Body RequestBody user_task);
 }

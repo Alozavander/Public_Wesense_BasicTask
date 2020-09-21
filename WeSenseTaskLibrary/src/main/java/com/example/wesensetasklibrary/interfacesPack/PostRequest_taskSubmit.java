@@ -15,6 +15,6 @@ public interface PostRequest_taskSubmit {
 
 
     @Headers({"Content-Type: application/json","Accept: application/json"})//需要添加头
-    @POST("/xxxx")                                                //Post目标地址
+    @POST("/")                                                //Post目标地址
     Call<ResponseBody> task_submit(@Body RequestBody user_task_Info);
 }
