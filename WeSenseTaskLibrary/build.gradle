@@ -32,7 +32,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     //这里引用了Public_SenseFunction、Retrofit、GSON库，如果在引用工程已引用，注意删除引用并替换动态连接
-    implementation 'com.github.Alozavander:Public_SenseFunction:v0.0.5'
+    implementation 'com.github.Alozavander:Public_SenseFunction:v0.0.7'
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.daimajia.numberprogressbar:library:1.4@aar'
