@@ -7,6 +7,7 @@
         <activity android:name=".example.Activity_Task_Detail"></activity>
         <activity android:name=".example.Activity_Task_Submit"></activity>
         <activity android:name=".ImplementionActivityPack.Activity_Publish_Basictask_imp"></activity>
+        <activity android:name=".ImplementionActivityPack.Activity_Task_Submit_imp"></activity>
     </application>
 
 </manifest>
