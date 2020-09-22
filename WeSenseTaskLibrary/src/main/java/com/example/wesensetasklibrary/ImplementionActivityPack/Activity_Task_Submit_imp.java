@@ -65,6 +65,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.example.wesensetasklibrary.BasicTaskURL.fileUploadURLTag;
+import static com.example.wesensetasklibrary.BasicTaskURL.taskSubmitURLTag;
+
 
 //注意此Activity的初始化需要传入两个URL以及task的gson格式内容
 public class Activity_Task_Submit_imp extends AppCompatActivity {
@@ -101,9 +104,7 @@ public class Activity_Task_Submit_imp extends AppCompatActivity {
     private Integer taskID;
     private long totalLength;
     private String taskSubmitURL;
-    private String taskSubmitURLTag = "publish_bascitask_taskSubmit";
     private String fileUploadURL;
-    private String fileUploadURLTag = "publish_bascitask_fileUpload";
 
 
     @Override

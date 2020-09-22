@@ -40,6 +40,8 @@ import retrofit2.http.Body;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
+import static com.example.wesensetasklibrary.BasicTaskURL.rootURLTag;
+
 /*
  * Author: LJH
  * Time:2020.8.25
@@ -56,7 +58,6 @@ public class Activity_Publish_Basictask_imp extends AppCompatActivity {
     Spinner taskKind_spinner;
     int taskKind = -1;
     private String rootURL;
-    private String rootURLTag = "publish_bascitask_rootURL";
     //private String funcURL;
     //private String funcURLTag = "publish_bascitask_funcURL";
 
